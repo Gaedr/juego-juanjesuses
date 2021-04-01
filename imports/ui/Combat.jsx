@@ -11,7 +11,6 @@ export const Combat = (props) => {
 
 
   const startBattle = (data) => {
-    console.log('Battle Start: ', data);
     const {player1, player2} = data;
     setCombats([
       {
@@ -26,22 +25,28 @@ export const Combat = (props) => {
 
   const calculateKills = (player) => {
     const {strategy, modifier, roll, ejercito} = player;
-    return ( (strategy + 0.5) * modifier * (ejercito.caballeros*2) + ejercito.simples + (1.5 * ejercito.entrenadas)) / (2 * roll)
+    const armyDamage = ejercito.simples + (1.5 * ejercito.entrenadas * 1.5) + (ejercito.caballeros * 2);
+    return (strategy + 0.5) * modifier * armyDamage / (2 * roll);
   }
 
-  const doPlayerBattle = (player) => {
-    const {simples, entrenadas, caballeros } = player?.ejercito;
-    const kills = calculateKills(player);
+  const killByWave = (army, total, kills) => {
+    const percentage = (army * 100)/total;
+    return Math.round( (percentage / 100) * kills);
+  }
+
+  const doRaid = (defender, attacker) => {
+    const { simples = 0, entrenadas = 0, caballeros = 0 } = defender?.ejercito;
+    const kills = calculateKills(attacker);
     const total = simples + entrenadas + caballeros;
 
     const bajas = {
-      simples: Math.round(simples - (((simples*100)/total)/100) * kills),
-      entrenadas: Math.round(entrenadas - (((entrenadas*100)/total)/100) * kills),
-      caballeros: Math.round(caballeros - (((caballeros*100)/total)/100) * kills),
+      simples: killByWave(simples, total, kills),
+      entrenadas: killByWave(entrenadas, total, kills),
+      caballeros: killByWave(caballeros, total, kills),
     };
     
     return {
-      ...player,
+      ...defender,
       ...{
         bajas,
         ejercito: {
@@ -55,11 +60,13 @@ export const Combat = (props) => {
   }
 
   const calculateBattle = (battle) => {
-    const lastBattle = combats.slice(-1)[0];
+    const lastBattle = combats?.slice(-1)?.[0] || {};
+    const player1 = {...lastBattle.player1 || {}, ...battle.player1};
+    const player2 = {...lastBattle.player2 || {}, ...battle.player2};
 
     return {
-      player1: doPlayerBattle({...lastBattle.player1, ...battle.player1}),
-      player2: doPlayerBattle({...lastBattle.player2, ...battle.player2})
+      player1: doRaid(player1, player2),
+      player2: doRaid(player2, player1)
     }
   };
 
