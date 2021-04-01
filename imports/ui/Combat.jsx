@@ -92,10 +92,9 @@ export const Combat = (props) => {
       ? <BattleInData onBattleStart={data => startBattle(data)}></BattleInData>
       : 
         <Panel>
-          <ShowCombat turn={turn} combat={combats.slice(-1)[0]} onNextTurn={battle => nextTurn(battle)}>
-            <Button onClick={() => finishBattle()}>Finalizar</Button>
-          </ShowCombat>
-          <TablaDatos combats={combats}></TablaDatos>
+          <ShowCombat turn={turn} combat={combats.slice(-1)[0]} onNextTurn={battle => nextTurn(battle)}/>
+          { turn > 1 && <TablaDatos combats={combats.filter(combat => combat.turn > 0)}></TablaDatos> }
+          <Button onClick={() => finishBattle()}>Finalizar</Button>
         </Panel>
       }
     </Panel>

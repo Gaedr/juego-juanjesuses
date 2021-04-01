@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 
 import { FlexboxGrid, InputNumber, Button, Panel, Divider, Container } from 'rsuite';
 import { ShowDataPlayer } from './ShowDataPlayer';
-import { TablaDatos} from './TablaDatos'
 
 export const ShowCombat = (props) => {
     const [players, setPlayers] = useState({
@@ -69,7 +68,6 @@ export const ShowCombat = (props) => {
                         <InputNumber prefix={`Modificador ${props?.combat?.player2?.name}`} name="modificador2" value={players.player2.modifier} onChange={t => setModificador('player2', t)}></InputNumber>
                     </FlexboxGrid.Item>
                 </FlexboxGrid>
-                <Divider></Divider>
                 <FlexboxGrid justify="center">
                     {props.children}
                 </FlexboxGrid>

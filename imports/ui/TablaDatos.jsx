@@ -4,10 +4,11 @@ import { Table, Panel } from 'rsuite';
 export const TablaDatos = (props) => {
 
   return (
-    <Panel bodyFill header="Batalla" bordered>
+    <Panel bodyFill header="Bajas en Batalla" bordered>
       <Table 
         headerHeight={80}
-        data={props.combats}
+        autoHeight
+        data={props.combats || []}
       >
         <Table.Column width={70} align="center" fixed  colSpan={2}>
           <Table.HeaderCell>Turno</Table.HeaderCell>
