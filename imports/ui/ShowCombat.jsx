@@ -43,32 +43,52 @@ export const ShowCombat = (props) => {
         });
     }
 
+    const playerTurnData = (playerId) => {
+        const playerName = `player${playerId}`;
+        return( 
+            <FlexboxGrid.Item colspan={6} align="middle">
+                <InputNumber 
+                    prefix={`Tirada ${props.combat[playerName]?.name}`}
+                    name={`tirada${playerId}`}
+                    value={players[playerName]?.roll}
+                    min={1}
+                    max={20}
+                    default={1}
+                    onChange={t => setTirada([playerName], t)}
+                ></InputNumber>
+                <InputNumber 
+                    prefix={`Modificador ${props.combat[playerName]?.name}`}
+                    name={`modificador1${playerId}`}
+                    value={players[playerName]?.modifier}
+                    min={1}
+                    max={10}
+                    default={1}
+                    onChange={t => setModificador([playerName], t)}
+                ></InputNumber>
+            </FlexboxGrid.Item>
+        )
+    }
+
     return(
         <Panel>
             <FlexboxGrid justify="space-around">
                 <FlexboxGrid.Item colspan={6}>
-                    <ShowDataPlayer player={props?.combat?.player1}></ShowDataPlayer>
+                    <ShowDataPlayer player={props.combat?.player1}></ShowDataPlayer>
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item>
                     <h1>{`Turno ${props.turn}`}</h1>
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={6}>
-                    <ShowDataPlayer player={props?.combat?.player2}></ShowDataPlayer>
+                    <ShowDataPlayer player={props.combat?.player2}></ShowDataPlayer>
                 </FlexboxGrid.Item>
             </FlexboxGrid>
             <Divider>Datos Turno</Divider>
             <FlexboxGrid justify="space-between" >
-                <FlexboxGrid.Item colspan={6} align="middle">
-                    <InputNumber prefix={`Tirada ${props?.combat?.player1?.name}`} name="tirada1" value={players.player1.roll} onChange={t => setTirada('player1', t)}></InputNumber>
-                    <InputNumber prefix={`Modificador ${props?.combat?.player1?.name}`} name="modificador1" value={players.player1.modifier} onChange={t => setModificador('player1', t)}></InputNumber>
-                </FlexboxGrid.Item>
+                {playerTurnData(1)}
                 <FlexboxGrid.Item>
                     <Button onClick={() => nextTurn()}>Siguiente Turno</Button>
                 </FlexboxGrid.Item>
-                <FlexboxGrid.Item colspan={6} align="middle">
-                    <InputNumber prefix={`Tirada  ${props?.combat?.player2?.name}`} name="tirada2" value={players.player2.roll} onChange={t => setTirada('player2', t)}></InputNumber>
-                    <InputNumber prefix={`Modificador ${props?.combat?.player2?.name}`} name="modificador2" value={players.player2.modifier} onChange={t => setModificador('player2', t)}></InputNumber>
-                </FlexboxGrid.Item>
+                {playerTurnData(2)}
             </FlexboxGrid>
             <FlexboxGrid justify="center">
                 {props.children}
